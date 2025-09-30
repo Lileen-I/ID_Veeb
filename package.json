@@ -1,0 +1,31 @@
+{
+  "name": "id_veeb",
+  "version": "1.0.0",
+  "description": "veebiprog tundides tehtud express.js projekt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Lileen-I@github.com/Lileen-I/ID_Veeb.git"
+  },
+  "keywords": [
+    "õppetöö",
+    "veebiprogrammeerimine",
+    "node.js",
+    "express.js",
+    "Tallinna",
+    "Ülikool",
+    "IT"
+  ],
+  "author": "Lileen Irv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lileen-I/ID_Veeb/issues"
+  },
+  "homepage": "https://github.com/Lileen-I/ID_Veeb#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
