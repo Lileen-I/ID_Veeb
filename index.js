@@ -4,6 +4,8 @@ const dateEt = require("./src/dateTimeET")
 const bodyparser = require("body-parser");
 //me loome objekti, mis ongi express.js_i programm ja edasi kasutame seda
 const app = express();
+const moment = require('moment');
+const FormattedDate1 = moment().format('MMMM Do YYYY, h:mm:ss a');
 //määrame renderdajaks ejs
 app.set("view engine", "ejs");
 //määrame kasutamiseks avaliku kataloogi
@@ -40,24 +42,41 @@ app.get("/regvisit", (req, res)=>{
 
 app.post("/regvisit", (req, res)=>{
 	console.log(req.body);
-	//avan tekstifaili kirjutamiseks sellisel moel, et kui teda pole, luuakse (parameeter "a")
+	const firstName = req.body.firstNameInput;
+	const lastName = req.body.lastNameInput;
+	const fullName = `${firstName} ${lastName}`;
+
 	fs.open("public/txt/visitlog.txt", "a", (err, file)=>{
 		if(err){
 			throw(err);
-		}
-		else {
-			//faili senisele sisule lisamine
-			fs.appendFile("public/txt/visitlog.txt", req.body.nameInput + "; ", (err)=>{
-				if(err){
-					throw(err);
+		} else {
+			fs.appendFile(
+				"public/txt/visitlog.txt",
+				`${fullName} külastas ${FormattedDate1}; `,
+				(err)=>{
+					if(err){
+						throw(err);
+					} else {
+						console.log("Salvestatud!");
+						res.render("visitregistered", { name: fullName });
+					}
 				}
-				else {
-					console.log("Salvestatud!");
-					res.render("regvisit");
-				}
-			});
+			);
 		}
 	});
+});
+
+app.get("/visitlog", (req, res)=>{
+	let visitlog = [];
+		fs.readFile("public/txt/visitlog.txt", "utf8", (err, data)=>{
+	    if(err){
+		    res.render("visitlog", {heading: "Mind on külastanud", listData: ["Kahjuks ei ole näha nimesi :("]});
+		} else {
+			visitlog = data.split(";");
+			res.render("visitlog", {heading: "Meie külalised", listData: visitlog});
+		}
+	});
+	
 });
 
 app.listen(5214);
