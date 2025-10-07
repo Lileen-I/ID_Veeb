@@ -52,7 +52,7 @@ app.post("/regvisit", (req, res)=>{
 		} else {
 			fs.appendFile(
 				"public/txt/visitlog.txt",
-				`${fullName} külastas ${FormattedDate1}; `,
+				`${fullName} , külastas ${FormattedDate1}; `,
 				(err)=>{
 					if(err){
 						throw(err);
@@ -70,10 +70,14 @@ app.get("/visitlog", (req, res)=>{
 	let visitlog = [];
 		fs.readFile("public/txt/visitlog.txt", "utf8", (err, data)=>{
 	    if(err){
-		    res.render("visitlog", {heading: "Mind on külastanud", listData: ["Kahjuks ei ole näha nimesi :("]});
+		    res.render("genericlist", {heading: "Mind on külastanud", listData: ["Kahjuks ei ole näha nimesi :("]});
 		} else {
+			let tempListData
+			for(let i = 0; i < visitlog.length - 1; i++){
+				listData.push(tempListData[i]);
+			}
 			visitlog = data.split(";");
-			res.render("visitlog", {heading: "Meie külalised", listData: visitlog});
+			res.render("genericlist", {heading: "Meie külalised", listData: visitlog});
 		}
 	});
 	
