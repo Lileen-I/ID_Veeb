@@ -3,9 +3,10 @@ const fs = require("fs");
 const dateEt = require("./src/dateTimeET")
 const bodyparser = require("body-parser");
 //lisan andmebaasiga suhtlemiseks mooduli
-const mysql = require("mysql2");
+//nüüd async jaoks kasutame mysql2 promise osa
+//const mysql = require("mysql2/promise");
 //lisan andmebaasi juurdepääsu infot
-const dbInfo = require("../../vp2025config");
+//const dbInfo = require("../../vp2025config");
 //me loome objekti, mis ongi express.js_i programm ja edasi kasutame seda
 const app = express();
 const moment = require('moment');
@@ -18,13 +19,20 @@ app.use(express.static("public"));
 app.use(bodyparser.urlencoded({extended: false}));
 
 //loon andmebaasi ühenduse
-const conn = mysql.createConnection({
+/* const conn = mysql.createConnection({
 	//neli kohustuslikku parameetrit
 	host: dbInfo.configData.host, 
 	user: dbInfo.configData.user,
 	password: dbInfo.configData.passWord,
 	database: dbInfo.configData.dataBase 
-});
+}); */
+
+/* const dbConf = {
+	host: dbInfo.configData.host, 
+	user: dbInfo.configData.user,
+	password: dbInfo.configData.passWord,
+	database: dbInfo.configData.dataBase  */
+
 
 app.get("/", (req, res)=>{
 	//res.send("Express.js läks edukalt käima!!")
@@ -95,22 +103,8 @@ app.get("/visitlog", (req, res)=>{
 	
 });
 
-app.get("/eestifilm", (req, res)=>{
-	res.render("eestifilm");
-});
-
-app.get("/eestifilm/inimesed", (req, res)=>{
-	const sqlReq = "SELECT * FROM person";
-	conn.execute(sqlReq, (err, sqlRES)=>{
-		if (err){
-			console.log(err);
-		}
-		else{
-			console.log(sqlRes);
-		}
-	});
-	//res.render("filmiinimesed");
-});
-
+//eestifilmi marsruudid
+const eestifilmRouter = require("./routes/eestifilmRoutes");
+app.use("/eestifilm", eestifilmRouter)
 
 app.listen(5214);
